@@ -14,6 +14,8 @@ ActiveRecord::Schema.define(version: 5) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "question_id"
+    t.string "answer"
+    t.boolean "correct", default: false
   end
 
   create_table "game_questions", force: :cascade do |t|
@@ -29,10 +31,6 @@ ActiveRecord::Schema.define(version: 5) do
   create_table "questions", force: :cascade do |t|
     t.string "category"
     t.string "question"
-    t.boolean "correct_answer", default: true
-    t.boolean "incorrect_answer_0", default: false
-    t.boolean "incorrect_answer_1", default: false
-    t.boolean "incorrect_answer_2", default: false
   end
 
   create_table "users", force: :cascade do |t|
