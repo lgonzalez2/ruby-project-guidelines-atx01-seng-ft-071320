@@ -5,12 +5,6 @@ class Game < ActiveRecord::Base
 
 
     def self.new_game(current_user)
-        
         Game.create(user_id: current_user.id)
-        binding.pry
     end
-
-
-
-
 end 

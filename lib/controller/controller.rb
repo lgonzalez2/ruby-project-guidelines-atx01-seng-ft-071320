@@ -1,11 +1,12 @@
 class Control
 
-    attr_accessor :current_user, :score, :current_game
+    attr_accessor :current_user, :score, :current_game, :current_game_questions
 
     def initialize
       @current_user = nil
       @score = 0
       @current_game = nil
+      @current_game_questions = nil
     end
     # need to find command that allows selections to have a space******
     # 
@@ -39,7 +40,9 @@ class Control
     main = PROMPT.select("Please select from following qptions to continue!", %w(NewGame HighScore Back Exit))
     case main
     when "NewGame"
-         Game.new_game(@current_user)
+         @current_game = Game.new_game(@current_user)
+         @current_game_questions = GameQuestion.create_game_questions(@current_game)
+         binding.pry
     when "HighScore"
 
     when "Back"
