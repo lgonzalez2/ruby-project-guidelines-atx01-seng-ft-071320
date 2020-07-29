@@ -13,25 +13,23 @@ class GetQandA
       response.body
     end
 
-    def create_questions
+    def create_questions_and_answers
       everything = GetQandA.get_all_questions
       all_questions = JSON.parse(everything)
       all_questions["results"].each do |questions_hash|
       category = questions_hash["category"]
       question = questions_hash["question"]
-      content = Question.find_or_create_by(category: category, question: question)
-      self.create_answers(content, questions_hash)
+      question_row = Question.find_or_create_by(category: category, question: question)
+      self.create_answers(question_row, questions_hash)
       end
      end
 
-    def create_answers(content, questions_hash)
-    #   everything = GetQandA.get_all_questions
-    #   all_questions = JSON.parse(everything)
-    #   all_questions["results"].each d |questions_hash|
+    def create_answers(question_row, questions_hash)
+
       answer = questions_hash["correct_answer"]
-      answer_row = Answer.find_or_create_by(answer: answer, question_id: content.id, correct: true)
+      answer_row = Answer.find_or_create_by(answer: answer, question_id: question_row.id, correct: true)
       questions_hash["incorrect_answers"].each do |inc_answer|
-      Answer.find_or_create_by(answer: inc_answer, question_id: content.id)
+      Answer.find_or_create_by(answer: inc_answer, question_id: question_row.id)
       
      end
     end
