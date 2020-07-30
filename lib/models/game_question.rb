@@ -17,6 +17,8 @@ class GameQuestion < ActiveRecord::Base
                     question_id_nine: ten_random[8].id, 
                     question_id_ten: ten_random[9].id)
     end
+
+   
     
 
 end 
