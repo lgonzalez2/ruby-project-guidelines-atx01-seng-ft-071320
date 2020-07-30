@@ -4,7 +4,6 @@ class Control
 
     def initialize
       @current_user = nil
-      @score = 0
       @current_game = nil
       @current_game_questions = nil
     end
@@ -16,22 +15,22 @@ class Control
     end
     def welcome
         welcome_question = PROMPT.yes?("Welcome to Trivia Game! Are you a new user?")
-        if welcome_question
-            @current_user = User.create_username
-            login
-        else
-            login
+    if welcome_question
+        @current_user = User.create_username
+        login
+    else
+        login
         end
     end
     def login
         login = PROMPT.select("Please select Login to continue!", %w(Login Back Exit))
-        case login
-        when "Login"
+    case login
+    when "Login"
             @current_user = User.find_username(self)
             main_menu
-        when "Back"
+    when "Back"
             welcome
-        else
+    else
             exit
         end
     end
@@ -43,14 +42,20 @@ class Control
          @current_game = Game.new_game(@current_user)
          @current_game_questions = GameQuestion.create_game_questions(@current_game)
          game_instructions(@current_game_questions)
-         
-
-
-         
     when "HighScore"
-        # create highscore method!!!!
+        display_high_score(current_user)
     when "Back"
         login
+    else "Exit"
+        exit
+     end
+    end
+
+    def display_high_score(current_user)
+        show_high_score = PROMPT.select("Your high score is #{current_user.high_score}!", %w(Back Exit))
+    case show_high_score
+    when "Back"
+        main_menu
     else "Exit"
         exit
      end
@@ -71,42 +76,306 @@ If you select the correct answer, you will be awarded 100 points! Try to beat yo
 
    
     def trivia_game(current_game_questions)
-        
-        # We want a question to appear with 1 correct answer and 3 incorrect
-        # If user selects the correct answer, 100 points will be added to @score 
-        # It will then trigger a prompt/alert letting them know if they got the question correct or incorrect
-        #   -if/else statement
-        # Stretch goal - score will be present in the terminal and will be updated with current score amount
-        # Have the total score show on screen and if its a new high score, inform the user.
-        # create a method for highscore
-        # ask them what they want to do next-- new game, back, high score, exit.
         first_question(current_game_questions)
     end
 
     def first_question(current_game_questions)
+        current_score = 0
         first = Question.find(current_game_questions.question_id_one)
-        options = Answer.where(question_id: first.id).shuffle
-        options_answers = options.pluck(:answer, :correct)
+        options = Answer.where(question_id: first.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
         value = PROMPT.select("Question #1...Category: #{first.category}
         
 #{first.question}") do |option|
-option.choice options_answers[0][0]
-option.choice options_answers[1][0]
-option.choice options_answers[2][0]
-option.choice options_answers[3][0]
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
 
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        second_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        second_question(current_game_questions, current_score)
+        end
     end
-            
-#         binding.pry
-#         value = PROMPT.enum_select("Question #1...Category: #{first.category}
-        
-# #{first.question}", options_answers)
-        
-        
 
+    def second_question(current_game_questions, current_score)
+        second = Question.find(current_game_questions.question_id_two)
+        options = Answer.where(question_id: second.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #2...Category: #{second.category}
+        
+#{second.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
 
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        third_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        third_question(current_game_questions, current_score)
+        end
     end
 
+    def third_question(current_game_questions, current_score)
+        third = Question.find(current_game_questions.question_id_three)
+        options = Answer.where(question_id: third.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #3...Category: #{third.category}
+        
+#{third.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        forth_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        forth_question(current_game_questions, current_score)
+        end
+    end
+
+    def forth_question(current_game_questions, current_score)
+        forth = Question.find(current_game_questions.question_id_four)
+        options = Answer.where(question_id: forth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #4...Category: #{forth.category}
+        
+#{forth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        fifth_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        fifth_question(current_game_questions, current_score)
+        end
+    end
+
+    def fifth_question(current_game_questions, current_score)
+        fifth = Question.find(current_game_questions.question_id_five)
+        options = Answer.where(question_id: fifth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #5...Category: #{fifth.category}
+        
+#{fifth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        sixth_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        sixth_question(current_game_questions, current_score)
+        end
+    end
+
+    def sixth_question(current_game_questions, current_score)
+        sixth = Question.find(current_game_questions.question_id_six)
+        options = Answer.where(question_id: sixth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #6...Category: #{sixth.category}
+        
+#{sixth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        seventh_question(current_game_questions, current_score)
+        else
+        current_score 
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        seventh_question(current_game_questions, current_score)
+        end
+    end
     
+    def seventh_question(current_game_questions, current_score)
+        seventh = Question.find(current_game_questions.question_id_seven)
+        options = Answer.where(question_id: seventh.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #7...Category: #{seventh.category}
+#{seventh.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        eighth_question(current_game_questions, current_score)
+        else
+        current_score
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        eighth_question(current_game_questions, current_score)
+        end
+    end
+
+    def eighth_question(current_game_questions, current_score)
+        eighth = Question.find(current_game_questions.question_id_eight)
+        options = Answer.where(question_id: eighth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #8...Category: #{eighth.category}
+#{eighth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        ninth_question(current_game_questions, current_score)
+        else
+        current_score
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        ninth_question(current_game_questions, current_score)
+        end
+    end
+
+    def ninth_question(current_game_questions, current_score)
+        ninth = Question.find(current_game_questions.question_id_nine)
+        options = Answer.where(question_id: ninth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #9...Category: #{ninth.category}
+#{ninth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        tenth_question(current_game_questions, current_score)
+        else
+        current_score
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        tenth_question(current_game_questions, current_score)
+        end
+    end
+
+    def tenth_question(current_game_questions, current_score)
+        tenth = Question.find(current_game_questions.question_id_ten)
+        options = Answer.where(question_id: tenth.id)
+        correct_answer = options[0].answer
+        shuffle_answers = []
+        options.each do |option|
+            shuffle_answers << option.answer
+        end
+        shuffle_answers = shuffle_answers.shuffle
+        value = PROMPT.select("Question #10...Category: #{tenth.category}
+#{tenth.question}") do |option|
+option.choice shuffle_answers[0]
+option.choice shuffle_answers[1]
+option.choice shuffle_answers[2]
+option.choice shuffle_answers[3]
+        end
+        if value == correct_answer
+        current_score += 100
+        correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
+        ending_message(current_score)
+        else
+        current_score
+        incorrect_response = PROMPT.ok("Whoops! That is incorrect! The correct answer is #{correct_answer}! Your current score is now #{current_score}!")
+        ending_message(current_score)
+        end
+    end
+
+    def ending_message(current_score)
+    ending = PROMPT.ok("Congratulations! You've finished this round of Trivia Game! Your final score is #{current_score}!!")
+    set_high_score(current_score)
+    main_menu
+    end
+
+    def set_high_score(current_score)
+        
+    if current_user.high_score < current_score
+            current_user.high_score = current_score
+            current_user.save
+            high_score_prompt = PROMPT.ok("You've have beaten your personal high score!!!")
+     end
+        current_high_score = PROMPT.ok("Your current high score is #{current_user.high_score}!")
+    end
 
 end
