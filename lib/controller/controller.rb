@@ -7,16 +7,14 @@ class Control
       @current_game = nil
       @current_game_questions = nil
     end
-    # need to find command that allows selections to have a space******
-    # 
+   
     def intro
         Images.intro_banner
         welcome
         
     end
     def welcome
-        
-        welcome_question = PROMPT.yes?("Welcome to Trivia Game! Are you a new user?")
+        welcome_question = PROMPT.yes?("Welcome to BigBrain! Are you a new user?".colorize(:light_cyan))
         
     if welcome_question
         @current_user = User.create_username
@@ -26,7 +24,8 @@ class Control
         end
     end
     def login
-        login = PROMPT.select("Please select Login to continue!", %w(Login Back Exit))
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+        login = PROMPT.select("Please select Login to continue!".colorize(:light_cyan), %w(Login Back Exit))
     case login
     when "Login"
             @current_user = User.find_username(self)
@@ -39,7 +38,8 @@ class Control
     end
 
     def main_menu
-    main = PROMPT.select("Please select from following qptions to continue!", %w(NewGame HighScore Leaderboard Back Exit))
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+    main = PROMPT.select("Please select from following options to continue!".colorize(:light_cyan), %w(NewGame HighScore Leaderboard Back Exit))
     case main
     when "NewGame"
          @current_game = Game.new_game(@current_user)
@@ -57,7 +57,8 @@ class Control
     end
 
     def display_high_score(current_user)
-        show_high_score = PROMPT.select("Your high score is #{current_user.high_score}!", %w(Back Exit))
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+        show_high_score = PROMPT.select("Your high score is #{current_user.high_score}!".colorize(:green), %w(Back Exit))
     case show_high_score
     when "Back"
         main_menu
@@ -69,13 +70,30 @@ class Control
     def leaderboard
         
         leader = User.order(high_score: :desc).limit(5).pluck(:name, :high_score)
-        # Images.leader_banner
-        # binding.pry
-        puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}"
-        puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}"
-        puts "3. #{leader[2][0]} with a high score of #{leader[2][1]}"
-        puts "4. #{leader[3][0]} with a high score of #{leader[3][1]}"
-        puts "5. #{leader[4][0]} with a high score of #{leader[4][1]}"
+        Images.leader_banner
+        
+        if leader.length == 1
+            puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}".colorize(:light_cyan)
+        elsif leader.length == 2
+            puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}".colorize(:light_cyan)
+            puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}".colorize(:light_cyan)
+        elsif leader.length == 3
+            puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}".colorize(:light_cyan)
+            puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}".colorize(:light_cyan)
+            puts "3. #{leader[2][0]} with a high score of #{leader[2][1]}".colorize(:light_cyan)
+        elsif leader.length == 4
+            puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}".colorize(:light_cyan)
+            puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}".colorize(:light_cyan)
+            puts "3. #{leader[2][0]} with a high score of #{leader[2][1]}".colorize(:light_cyan)
+            puts "4. #{leader[3][0]} with a high score of #{leader[3][1]}".colorize(:light_cyan)
+        elsif leader.length == 5
+            puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}".colorize(:light_cyan)
+            puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}".colorize(:light_cyan)
+            puts "3. #{leader[2][0]} with a high score of #{leader[2][1]}".colorize(:light_cyan)
+            puts "4. #{leader[3][0]} with a high score of #{leader[3][1]}".colorize(:light_cyan)
+            puts "5. #{leader[4][0]} with a high score of #{leader[4][1]}".colorize(:light_cyan)
+        end 
+    
         back_to = PROMPT.select("", %w(Back Exit))
         case back_to
         when "Back"
@@ -90,8 +108,10 @@ class Control
     end 
 
     def game_instructions(current_game_questions)
-        instructions = PROMPT.select("Welcome to Trivia game! You'll be given 10 questions that include the category... 
-If you select the correct answer, you will be awarded 100 points! Try to beat your high score! Ready!?", %w(Start Back Exit))
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+        instructions = PROMPT.select("Welcome to BigBrain! Here, you'll be given 10 questions that include the category... 
+If you select the correct answer, you will be awarded a certain amount of points...
+The higher the question, the highter the points!!! Ready to start!?".colorize(:light_cyan), %w(Start Back Exit))
         case instructions
         when "Start"
             trivia_game(current_game_questions)   
@@ -117,9 +137,9 @@ If you select the correct answer, you will be awarded 100 points! Try to beat yo
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #1...Category: #{first.category}
-        
-#{first.question}") do |option|
+#{first.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -146,9 +166,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #2...Category: #{second.category}
-        
-#{second.question}") do |option|
+#{second.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -175,9 +195,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #3...Category: #{third.category}
-        
-#{third.question}") do |option|
+#{third.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -204,9 +224,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #4...Category: #{forth.category}
-        
-#{forth.question}") do |option|
+#{forth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -233,9 +253,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #5...Category: #{fifth.category}
-        
-#{fifth.question}") do |option|
+#{fifth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -262,9 +282,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #6...Category: #{sixth.category}
-        
-#{sixth.question}") do |option|
+#{sixth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -291,8 +311,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #7...Category: #{seventh.category}
-#{seventh.question}") do |option|
+#{seventh.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -318,8 +339,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #8...Category: #{eighth.category}
-#{eighth.question}") do |option|
+#{eighth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -345,8 +367,9 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
         value = PROMPT.select("Question #9...Category: #{ninth.category}
-#{ninth.question}") do |option|
+#{ninth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -372,8 +395,10 @@ option.choice shuffle_answers[3]
             shuffle_answers << option.answer
         end
         shuffle_answers = shuffle_answers.shuffle
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+        puts "Bonus Round!!!! This question is worth 1000 points!!!".light_yellow.blink
         value = PROMPT.select("Question #10...Category: #{tenth.category}
-#{tenth.question}") do |option|
+#{tenth.question}".colorize(:light_cyan)) do |option|
 option.choice shuffle_answers[0]
 option.choice shuffle_answers[1]
 option.choice shuffle_answers[2]
@@ -391,7 +416,8 @@ option.choice shuffle_answers[3]
     end
 
     def ending_message(current_score)
-    ending = PROMPT.ok("Congratulations! You've finished this round of Trivia Game! Your final score is #{current_score}!!")
+        puts "---------------------------------------------------------------------------------------------------------".colorize(:red)
+    ending = PROMPT.ok("Congratulations! You've finished this round of BigBrain! Your final score is #{current_score}!!")
     set_high_score(current_score)
     main_menu
     end
