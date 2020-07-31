@@ -10,11 +10,14 @@ class Control
     # need to find command that allows selections to have a space******
     # 
     def intro
-        #welcome banner
+        Images.intro_banner
         welcome
+        
     end
     def welcome
+        
         welcome_question = PROMPT.yes?("Welcome to Trivia Game! Are you a new user?")
+        
     if welcome_question
         @current_user = User.create_username
         login
@@ -36,7 +39,7 @@ class Control
     end
 
     def main_menu
-    main = PROMPT.select("Please select from following qptions to continue!", %w(NewGame HighScore Back Exit))
+    main = PROMPT.select("Please select from following qptions to continue!", %w(NewGame HighScore Leaderboard Back Exit))
     case main
     when "NewGame"
          @current_game = Game.new_game(@current_user)
@@ -44,6 +47,8 @@ class Control
          game_instructions(@current_game_questions)
     when "HighScore"
         display_high_score(current_user)
+    when "Leaderboard"
+        leaderboard
     when "Back"
         login
     else "Exit"
@@ -60,6 +65,29 @@ class Control
         exit
      end
     end
+
+    def leaderboard
+        
+        leader = User.order(high_score: :desc).limit(5).pluck(:name, :high_score)
+        # Images.leader_banner
+        # binding.pry
+        puts "1. #{leader[0][0]} with a high score of #{leader[0][1]}"
+        puts "2. #{leader[1][0]} with a high score of #{leader[1][1]}"
+        puts "3. #{leader[2][0]} with a high score of #{leader[2][1]}"
+        puts "4. #{leader[3][0]} with a high score of #{leader[3][1]}"
+        puts "5. #{leader[4][0]} with a high score of #{leader[4][1]}"
+        back_to = PROMPT.select("", %w(Back Exit))
+        case back_to
+        when "Back"
+            main_menu
+        else "Exit"
+            exit
+         end
+        
+        
+        
+
+    end 
 
     def game_instructions(current_game_questions)
         instructions = PROMPT.select("Welcome to Trivia game! You'll be given 10 questions that include the category... 
@@ -128,7 +156,7 @@ option.choice shuffle_answers[3]
 
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 200
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         third_question(current_game_questions, current_score)
         else
@@ -157,7 +185,7 @@ option.choice shuffle_answers[3]
 
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 300
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         forth_question(current_game_questions, current_score)
         else
@@ -186,7 +214,7 @@ option.choice shuffle_answers[3]
 
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 400
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         fifth_question(current_game_questions, current_score)
         else
@@ -215,7 +243,7 @@ option.choice shuffle_answers[3]
 
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 500
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         sixth_question(current_game_questions, current_score)
         else
@@ -244,7 +272,7 @@ option.choice shuffle_answers[3]
 
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 500
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         seventh_question(current_game_questions, current_score)
         else
@@ -271,7 +299,7 @@ option.choice shuffle_answers[2]
 option.choice shuffle_answers[3]
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 500
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         eighth_question(current_game_questions, current_score)
         else
@@ -298,7 +326,7 @@ option.choice shuffle_answers[2]
 option.choice shuffle_answers[3]
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 500
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         ninth_question(current_game_questions, current_score)
         else
@@ -325,7 +353,7 @@ option.choice shuffle_answers[2]
 option.choice shuffle_answers[3]
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 500
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         tenth_question(current_game_questions, current_score)
         else
@@ -352,7 +380,7 @@ option.choice shuffle_answers[2]
 option.choice shuffle_answers[3]
         end
         if value == correct_answer
-        current_score += 100
+        current_score += 1000
         correct_response = PROMPT.ok("Nice! You choose the correct answer! Your current score is now #{current_score}!")
         ending_message(current_score)
         else
